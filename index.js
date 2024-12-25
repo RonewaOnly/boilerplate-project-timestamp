@@ -23,6 +23,28 @@ app.get("/", function (req, res) {
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
+// API Route: /api/:date?
+app.get('/api/:date?', (req, res) => {
+  const dateParam = req.params.date;
+
+  // If no date is provided, use the current date
+  const date = dateParam
+      ? !isNaN(dateParam)
+          ? new Date(parseInt(dateParam)) // Parse as timestamp if numeric
+          : new Date(dateParam) // Parse as date string
+      : new Date();
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+      return res.json({ error: "Invalid Date" });
+  }
+
+  // Return the response object
+  res.json({
+      unix: date.getTime(),
+      utc: date.toUTCString(),
+  });
+});
 
 
 
